@@ -54,3 +54,19 @@ query = (TweetArchive
              fields=[Tweet.user, Tweet.message],
              query=Tweet.select(Tweet.user, Tweet.message))
          .execute())
+
+
+""" Updating existing records """
+
+# If a model instance has a primary key, the save() method will update it
+
+# Updating multiple records:
+query = Person.update(has_birthday=True).where(Person.birthdate == today)
+query.execute()
+
+q = User.update(active=False).where(User.registration_expired == True)
+q.execute()
+
+# The same, using UpdateQuery class:
+uq = UpdateQuery(User, active=False).where(User.registration_expired == True)
+uq.execute()
