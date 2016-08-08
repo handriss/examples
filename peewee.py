@@ -70,3 +70,18 @@ q.execute()
 # The same, using UpdateQuery class:
 uq = UpdateQuery(User, active=False).where(User.registration_expired == True)
 uq.execute()
+
+
+""" Deleting """
+
+# Deleting a given model instance:
+planet = Planet.get(Planet.name == "Alderaan")
+planet.delete_instance()
+
+# Deleting any dependent objects:
+planet.delete_instance(recursive=True)
+
+
+# Deleting a number of records:
+query = Planet.delete().where(Planet.owners == "rebels")
+query.execute()
