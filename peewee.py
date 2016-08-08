@@ -214,4 +214,29 @@ Tweet.select().count()
 Tweet.select().where(Tweet.id > 50).count()
 
 
-""" Aggre
+""" Aggregating records """
+
+# Get usernames and the number of tweets created by them:
+query = User.select().annotate(Tweet)
+
+query = (User
+         .select(User, fn.Count(Tweet.id).alias('count'))
+         .join(Tweet)
+         .group_by(User))
+
+# Include users with 0 tweets use left join:
+query = (User
+         .select()
+         .join(Tweet, JOIN.LEFT_OUTER)
+         .switch(User)
+         .annotate(Tweet))
+
+""" Retrieving scalar values """
+
+# Return a single scalar value:
+PageView.select(fn.Count(fn.Distinct(PageView.url))).scalar()
+
+# Return a tuple of scalar values:
+Employee.select(
+    fn.Min(Employee.salary), fn.Max(Employee.salary)
+).scalar(as_tuple=True)
