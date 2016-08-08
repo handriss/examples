@@ -123,3 +123,21 @@ person, created = Person.get_or_create(
 
 
 """ Selecting multiple records """
+
+# Iterating over all rows:
+for planet in Planet.select():
+    print(planet.name)
+
+# If I have a foreignkey assigned to model, I can use related_name to create a back-reference:
+# - Planet model has Planet.owner foreignkeyfield
+# - empire and rebels model instances are owners of planets
+
+# Accessing the given planets owner (there can be only one owner):
+planet = Planet.get(Planet.name == "Alderaan")
+print(planet.owner)
+
+# Accessing all planets owned by a given faction:
+owner = Owner.get(Owner.name == "Galactic Empire")
+owner.planets # it return a query, through which I can iterate
+for planet in owner.planets:
+    print(planet.name)
