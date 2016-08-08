@@ -85,3 +85,12 @@ planet.delete_instance(recursive=True)
 # Deleting a number of records:
 query = Planet.delete().where(Planet.owners == "rebels")
 query.execute()
+
+
+""" Selecting a single record """
+
+# Select a single model instance, gives DoesNotExist exception if nothing is found:
+Planet.get(Planet.id == 1)
+
+# Selecting a single model instance with more advanced conditions:
+Planet.select().join(Galaxy).where(Planet.mass > 9.0E+100).order_by(Galaxy.size.desc()).get()
