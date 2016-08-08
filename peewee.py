@@ -94,3 +94,32 @@ Planet.get(Planet.id == 1)
 
 # Selecting a single model instance with more advanced conditions:
 Planet.select().join(Galaxy).where(Planet.mass > 9.0E+100).order_by(Galaxy.size.desc()).get()
+
+
+""" Create or get """
+
+# I want to create a new user account, but username is a unique field:
+try:
+    with db.atomic():
+        return User.create(username=username)
+except peewee.IntegrityError:
+    # `username` is a unique column, so this username already exists,
+    # making it safe to call .get().
+    return User.get(User.username == username)
+
+# I can call create_or_get() instead of all this long code (user is the model instance,
+# created is a boolean whether the record was created):
+user, created = User.create_or_get(username=username)
+
+# If I want to get the instance first:
+user, created = User.get_or_create(username=username)
+
+# Getting a person based on first and last name, but if no person is found
+# I give in her birth of date and favourite color as well:
+person, created = Person.get_or_create(
+    first_name=first_name,
+    last_name=last_name,
+    defaults={'dob': dob, 'favorite_color': 'green'})
+
+
+""" Selecting multiple records """
