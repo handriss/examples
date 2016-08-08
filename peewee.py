@@ -172,3 +172,46 @@ Tweet.select().where(Tweet.user << staff_super)
 
 
 """ Sorting records """
+
+# Returning rows in ascending order:
+Planet.select().order_by(Planet.mass)
+
+Planet.select().order_by(Planet.mass.asc())
+
+Planet.select().order_by(+Planet.mass)
+
+# Returning records in descending order:
+Planet.select().order_by(Planet.mass.desc()):
+
+Planet.select().order_by(-Planet.mass)
+
+# Ordering by multiple values, first by name of her capital city then by mass:
+Planet.select().order_by(Planet.capital_city, Planet.mass)
+
+# Ordering based on count:
+query = (User
+         .select(User.username, fn.COUNT(Tweet.id).alias('num_tweets'))
+         .join(Tweet, JOIN.LEFT_OUTER)
+         .group_by(User.username)
+         .order_by(fn.COUNT(Tweet.id).desc()))
+
+# Ordering based on count using SQL in order_by:
+query = (User
+         .select(User.username, fn.COUNT(Tweet.id).alias('num_tweets'))
+         .join(Tweet, JOIN.LEFT_OUTER)
+         .group_by(User.username)
+         .order_by(SQL('num_tweets').desc()))
+
+
+""" Getting random records """
+LotteryNumber.select().order_by(fn.Random()).limit(5)
+
+""" Paginating records """
+Tweet.select().order_by(Tweet.id).paginate(2, 10)
+
+""" Counting records """
+Tweet.select().count()
+Tweet.select().where(Tweet.id > 50).count()
+
+
+""" Aggre
