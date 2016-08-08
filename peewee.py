@@ -141,3 +141,34 @@ owner = Owner.get(Owner.name == "Galactic Empire")
 owner.planets # it return a query, through which I can iterate
 for planet in owner.planets:
     print(planet.name)
+
+
+""" Filtering queries """
+
+# For a singl record with get:
+planet = Planet.get(Planet.name == "Alderaan")
+
+# For multple records with select use where:
+query = Planet.delete().where(Planet.owners == "rebels")
+
+# There are multiple query operators, two notable operators:
+<< # in operator, searching in a query or list
+>> None # None/Null operators
+
+# I can use python's AND and OR operators:
+Planet.select().where(
+    (Planet.has_atmosphere == True) &
+    (Planet.is_terrestrial == True)
+)
+
+# Get tweets by staff or superusers (assumes FK relationship):
+Tweet.select().join(User).where(
+    (User.is_staff == True) | (User.is_superuser == True))
+
+# Get tweets by staff or superusers using a subquery:
+staff_super = User.select(User.id).where(
+    (User.is_staff == True) | (User.is_superuser == True))
+Tweet.select().where(Tweet.user << staff_super)
+
+
+""" Sorting records """
